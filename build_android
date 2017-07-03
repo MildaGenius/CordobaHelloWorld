@@ -1,0 +1,27 @@
+#!/bin/sh
+
+#delete previous build
+rm -rf platforms/android/build/outputs/
+
+
+#download required plugins
+cordova plugin cordova-plugin-device
+cordova plugin add cordova-plugin-crosswalk-webview
+
+#add ios platform
+cordova platforms add android@6.0.0
+
+#copy command to force enable webgl for blacklisted devices
+#cp assets/android/xwalk-command-line platforms/android/assets
+
+#copy keystore for sign
+cp ~/work/build/certificates/android/bistudio.keystore .
+
+#build for device
+cordova build android --debug --device
+
+#rename apk
+cp platforms/android/build/outputs/apk/android-armv7-release.apk HelloWorld.apk
+
+#upload to HockeyKit
+#python -u uploadToHockeyKit.py -v --userName=hockeykit --password=Ieboh5ea5E --destinationDirectory=public/com.bistudio.mobiledayz_goo/MiniDayZ_12 --fileName=MiniDayZ_android_0.0.1_12 --bundleId=com.bistudio.mobiledayz --platform=android
